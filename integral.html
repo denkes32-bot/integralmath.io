@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Integral Explorer — Discover the Mathematics of Area</title>
+<style>
+:root{--bg:#f6f7fb;--fg:#1c2333;--card:#fff;--mut:#5b6478;--ln:#d9deea;--bl:#2563eb;--rd:#dc2626;--gr:#059669;--cv:#1d4ed8;--or:#f59e0b;--pu:#9333ea;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--fg:#e8ecf5;--card:#171e2e;--mut:#9aa5bd;--ln:#2b3550;--bl:#60a5fa;--rd:#f87171;--gr:#34d399;--cv:#93c5fd;--or:#fbbf24;--pu:#c084fc;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1420;--fg:#e8ecf5;--card:#171e2e;--mut:#9aa5bd;--ln:#2b3550;--bl:#60a5fa;--rd:#f87171;--gr:#34d399;--cv:#93c5fd;--or:#fbbf24;--pu:#c084fc;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;padding:10px 16px;background:var(--card);border-bottom:1px solid var(--ln);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+nav{display:flex;flex-wrap:wrap;gap:6px}
+button,select,input{font:inherit;color:inherit}
+nav button{background:none;border:1px solid transparent;border-radius:8px;padding:8px 12px;min-height:44px;cursor:pointer}
+nav button[aria-current=true]{border-color:var(--bl);color:var(--bl);font-weight:600}
+main{max-width:1120px;margin:0 auto;padding:16px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:16px;margin-bottom:16px}
+.g{display:grid;grid-template-columns:1fr 330px;gap:16px;align-items:start}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:820px){.g,.two{grid-template-columns:1fr}}
+.btn{background:var(--bl);color:#fff;border:0;border-radius:10px;padding:12px 22px;min-height:44px;font-weight:600;cursor:pointer}
+.btn.s{background:none;color:var(--fg);border:1px solid var(--ln)}
+.btn.on{outline:2px solid var(--bl)}
+label{display:block;margin:10px 0 4px;font-weight:600;font-size:14px}
+select,input[type=number],textarea{width:100%;box-sizing:border-box;padding:10px;min-height:44px;border:1px solid var(--ln);border-radius:8px;background:var(--bg)}
+input[type=range]{width:100%;min-height:44px}
+.row{display:flex;gap:10px}.row>*{flex:1}
+fieldset{border:1px solid var(--ln);border-radius:8px;margin:10px 0}
+fieldset label{font-weight:400;display:flex;gap:8px;align-items:center;min-height:36px;margin:0}
+dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px;margin:8px 0 0}dt{color:var(--mut)}dd{margin:0;font-weight:600;text-align:right}
+.mut{color:var(--mut);font-size:14px}.err{color:var(--rd);font-weight:600;min-height:1.3em;font-size:14px}
+h1{font-size:clamp(28px,5vw,44px);margin:.2em 0}h2{margin:.2em 0 .5em;font-size:22px}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+@media(max-width:820px){.hero{grid-template-columns:1fr}}
+.math{font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:18px;overflow-x:auto;padding:6px 0}
+ol li,ul li{margin:6px 0}
+</style></head><body>
+<header><b style="font-size:18px">∫ Integral Explorer</b><nav id="nv" aria-label="Modul"></nav></header>
+<main>
+<section id="s0" class="on">
+ <div class="hero card">
+  <div><h1>Integral Explorer</h1>
+  <p style="font-size:19px;margin:0 0 8px"><b>Memahami integral melalui grafik, luas, dan perubahan.</b></p>
+  <p>Bagaimana menghitung luas di bawah kurva ketika rumus segitiga atau persegi panjang tidak cukup? Integral dipakai untuk menghitung jarak dari kecepatan, volume air yang terkumpul, dan banyak besaran lain yang terakumulasi. Geser, ubah, dan amati sendiri.</p>
+  <button class="btn" id="go">Mulai Eksplorasi</button></div>
+  <div id="pv"></div>
+ </div>
+ <div class="card"><h2>Modul</h2><ul id="mods"></ul><p class="mut">Pelacakan kemajuan belum tersedia, jadi tidak ditampilkan.</p></div>
+</section>
+
+<section id="s1">
+ <div class="card"><h2>Masalah: berapa luas daerah di bawah y = x² pada [0, 2]?</h2>
+  <ol><li>Perkirakan luasnya secara visual.</li><li>Bagi daerah menjadi persegi panjang (mulai dari n = 4).</li><li>Tambah n dan amati apa yang berubah pada jumlah dan galatnya.</li></ol>
+  <p class="mut">Rumus luas bangun datar biasa tidak langsung berlaku untuk daerah yang dibatasi kurva. Idenya: jumlahkan banyak luas kecil.</p></div>
+ <div class="g"><div>
+  <div class="card"><div class="row" style="margin-bottom:8px"><button class="btn on" id="tv">Visualisasi</button><button class="btn s" id="tm">Penjelasan Matematis</button></div>
+   <div id="pl"></div>
+   <p class="mut" style="margin:6px 0 0"><span style="color:var(--cv)">━</span> kurva f &nbsp; <span style="color:var(--or)">■</span> persegi panjang (f ≥ 0) &nbsp; <span style="color:var(--pu)">■</span> persegi panjang (f &lt; 0) &nbsp; <span style="color:var(--bl)">■</span> luas eksak</p></div>
+  <div class="card" id="ex" hidden><h2>Penjelasan Matematis</h2><ol id="exl"></ol>
+   <div class="math">∫ₐᵇ f(x) dx = limₙ→∞ Σᵢ₌₁ⁿ f(xᵢ*)Δx</div>
+   <p class="mut">Hubungan ini berlaku untuk kondisi yang sesuai, misalnya f kontinu pada [a, b].</p></div>
+  <div class="card"><h2>Pengamatan</h2><ul id="obs"></ul></div>
+ </div>
+ <aside class="card">
+  <label for="fs">Fungsi</label><select id="fs"></select>
+  <div class="row"><div><label for="ia">Batas bawah a</label><input id="ia" type="number" step="0.1" value="0"></div><div><label for="ib">Batas atas b</label><input id="ib" type="number" step="0.1" value="2"></div></div>
+  <p id="warn" class="err" role="alert"></p>
+  <label for="in">Jumlah persegi panjang: n = <b id="nl">4</b></label><input id="in" type="range" min="1" max="100" value="4">
+  <fieldset><legend>Metode pendekatan</legend>
+   <label><input type="radio" name="m" value="L" checked> Titik kiri</label>
+   <label><input type="radio" name="m" value="R"> Titik kanan</label>
+   <label><input type="radio" name="m" value="M"> Titik tengah</label></fieldset>
+  <label style="font-weight:400;display:flex;gap:8px"><input type="checkbox" id="ie" checked> Tampilkan luas eksak (terarsir)</label>
+  <button class="btn s" id="rs" style="margin-top:10px">Reset Eksplorasi</button>
+  <h2 style="margin-top:16px;font-size:17px">Hasil</h2><dl id="res"></dl>
+ </aside></div>
+ <div class="card"><h2>Pertanyaan Inkuiri</h2>
+  <ul><li>Apa yang berubah ketika interval diperlebar?</li><li>Apa yang terjadi ketika fungsi memotong sumbu-x?</li><li>Bisakah integral bernilai nol padahal luas geometrisnya tidak nol?</li><li>Metode mana yang paling akurat untuk contoh ini?</li><li>Bagaimana bentuk fungsi memengaruhi pendekatan?</li></ul>
+  <label for="rf">Catatan pengamatan Anda</label><textarea id="rf" rows="3"></textarea>
+  <button class="btn" id="rsv" style="margin-top:8px">Simpan catatan</button>
+  <p class="mut">Catatan hanya disimpan di memori selama halaman ini terbuka, tidak disimpan permanen.</p><ul id="rl"></ul></div>
+</section>
+
+<section id="s2">
+ <div class="card"><h2>Integral Tentu dan Luas Bertanda</h2>
+  <p>Integral tentu mengukur akumulasi bertanda: daerah di atas sumbu-x bernilai positif, di bawah sumbu-x bernilai negatif, dan keduanya bisa saling meniadakan. Luas geometris selalu tak negatif dan dihitung per daerah, bukan dari nilai mutlak hasil akhir.</p>
+  <div class="row" id="eb"></div>
+  <div class="row" style="margin-top:8px"><label style="font-weight:400;display:flex;gap:8px"><input type="radio" name="sv" value="s" checked> Integral Bertanda</label><label style="font-weight:400;display:flex;gap:8px"><input type="radio" name="sv" value="g"> Luas Geometris Total</label></div></div>
+ <div class="two"><div class="card" id="p2"></div><div class="card" id="t2"></div></div>
+</section>
+
+<section id="s3">
+ <div class="card"><h2>Integral Tak Tentu</h2>
+  <div class="math">∫ f(x) dx = F(x) + C, dengan F′(x) = f(x)</div>
+  <p>Contoh: ∫ 2x dx = x² + C. Geser C dan lihat bahwa semua kurva hanya bergeser vertikal dan memiliki turunan yang sama.</p>
+  <label for="ic">C = <b id="cl">0</b></label><input id="ic" type="range" min="-5" max="5" step="0.5" value="0"></div>
+ <div class="two"><div class="card" id="p3"></div><div class="card" id="t3"></div></div>
+</section>
+
+<section id="s4">
+ <div class="card"><h2>Hubungan Turunan dan Integral</h2>
+  <p>Untuk f(x) = 2x, fungsi akumulasi A(x) = ∫₀ˣ 2t dt = x². Geser x dan bandingkan luas terarsir (kiri) dengan nilai A(x) dan kemiringannya (kanan).</p>
+  <label for="ix">x = <b id="xl">1.5</b></label><input id="ix" type="range" min="0" max="3" step="0.05" value="1.5"></div>
+ <div class="two"><div class="card" id="pa"></div><div class="card" id="pb"></div></div>
+ <div class="card" id="t4"></div>
+</section>
+</main>
+<script>
+//MATH
+const FN=[
+{l:'f(x) = x',f:x=>x,F:x=>x*x/2,Ft:'x²/2',a:0,b:2,r:[0]},
+{l:'f(x) = x²',f:x=>x*x,F:x=>x**3/3,Ft:'x³/3',a:0,b:2,r:[0]},
+{l:'f(x) = x³',f:x=>x**3,F:x=>x**4/4,Ft:'x⁴/4',a:0,b:2,r:[0]},
+{l:'f(x) = 2x + 1',f:x=>2*x+1,F:x=>x*x+x,Ft:'x² + x',a:0,b:2,r:[-.5]},
+{l:'f(x) = sin(x)',f:Math.sin,F:x=>-Math.cos(x),Ft:'−cos x',a:0,b:Math.PI,r:'pi'},
+{l:'f(x) = x² − 1',f:x=>x*x-1,F:x=>x**3/3-x,Ft:'x³/3 − x',a:0,b:2,r:[-1,1]},
+{l:'f(x) = 1 − x²',f:x=>1-x*x,F:x=>x-x**3/3,Ft:'x − x³/3',a:0,b:2,r:[-1,1]}];
+const roots=(g,a,b)=>{const lo=Math.min(a,b),hi=Math.max(a,b);let r=g.r;if(r==='pi'){r=[];for(let k=Math.ceil(lo/Math.PI);k<=Math.floor(hi/Math.PI);k++)r.push(k*Math.PI)}return r.filter(x=>x>lo+1e-12&&x<hi-1e-12)};
+const why=(a,b,n)=>!Number.isFinite(a)||!Number.isFinite(b)?'Masukkan bilangan yang valid.':a===b?'a dan b tidak boleh sama.':Math.abs(a)>20||Math.abs(b)>20?'Gunakan nilai antara −20 dan 20.':!Number.isInteger(n)||n<1||n>100?'n harus bilangan bulat 1–100.':'';
+const dxOf=(a,b,n)=>(b-a)/n;
+const samp=(a,b,n,i,m)=>a+(i-(m==='L'?1:m==='R'?0:.5))*dxOf(a,b,n);
+const riemann=(f,a,b,n,m)=>{let s=0;for(let i=1;i<=n;i++)s+=f(samp(a,b,n,i,m));return s*dxOf(a,b,n)};
+const exact=(g,a,b)=>g.F(b)-g.F(a);
+const pts=(g,a,b)=>[Math.min(a,b),...roots(g,a,b),Math.max(a,b)];
+const geo=(g,a,b)=>{const p=pts(g,a,b);let t=0;for(let i=0;i<p.length-1;i++)t+=Math.abs(g.F(p[i+1])-g.F(p[i]));return t};
+const dcheck=(F,f,xs)=>Math.max(...xs.map(x=>Math.abs((F(x+1e-5)-F(x-1e-5))/2e-5-f(x))));
+//ENDMATH
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const fm=v=>(Math.abs(v)<5e-10?0:v).toLocaleString('id-ID',{maximumFractionDigits:6});
+const MN={L:'Titik kiri',R:'Titik kanan',M:'Titik tengah'};
+const nice=r=>{const p=10**Math.floor(Math.log10(r/6)),q=r/6/p;return p*(q<1.5?1:q<3.5?2:q<7.5?5:10)};
+function plot(el,xr,yr,draw,H=380){const W=720,m=36,sx=x=>m+(x-xr[0])/(xr[1]-xr[0])*(W-2*m),sy=y=>H-m-(y-yr[0])/(yr[1]-yr[0])*(H-2*m);
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Grafik fungsi dan daerah di bawah kurva" style="width:100%;height:auto;display:block">`;
+ const tx=nice(xr[1]-xr[0]),ty=nice(yr[1]-yr[0]),T=(x,y,t,a)=>`<text x="${x}" y="${y}" text-anchor="${a}" font-size="11" fill="var(--mut)">${t}</text>`;
+ for(let x=Math.ceil(xr[0]/tx)*tx;x<=xr[1]+1e-9;x+=tx)s+=`<line x1="${sx(x)}" y1="${m}" x2="${sx(x)}" y2="${H-m}" stroke="var(--ln)"/>`+T(sx(x),H-m+14,+x.toFixed(3),'middle');
+ for(let y=Math.ceil(yr[0]/ty)*ty;y<=yr[1]+1e-9;y+=ty)s+=`<line x1="${m}" y1="${sy(y)}" x2="${W-m}" y2="${sy(y)}" stroke="var(--ln)"/>`+T(m-5,sy(y)+4,+y.toFixed(3),'end');
+ if(yr[0]<=0&&yr[1]>=0)s+=`<line x1="${m}" y1="${sy(0)}" x2="${W-m}" y2="${sy(0)}" stroke="var(--fg)" stroke-width="1.5"/>`+T(W-m+2,sy(0)+4,'x','start');
+ if(xr[0]<=0&&xr[1]>=0)s+=`<line x1="${sx(0)}" y1="${m}" x2="${sx(0)}" y2="${H-m}" stroke="var(--fg)" stroke-width="1.5"/>`+T(sx(0)+6,m-4,'y','start');
+ el.innerHTML=s+draw(sx,sy)+'</svg>'}
+const P=(f,x0,x1,sx,sy,N=240)=>{let d='';for(let i=0;i<=N;i++){const x=x0+(x1-x0)*i/N;d+=(i?'L':'M')+sx(x).toFixed(1)+' '+sy(f(x)).toFixed(1)}return d};
+const curve=(f,x0,x1,sx,sy,c='var(--cv)',dash='')=>`<path d="${P(f,x0,x1,sx,sy)}" fill="none" stroke="${c}" stroke-width="2.5" ${dash?`stroke-dasharray="${dash}"`:''}/>`;
+const area=(f,x0,x1,sx,sy,c,o)=>`<path d="${P(f,x0,x1,sx,sy,120)}L${sx(x1)} ${sy(0)}L${sx(x0)} ${sy(0)}Z" fill="${c}" fill-opacity="${o}"/>`;
+const shade=(g,a,b,sx,sy,geom,o)=>{const p=pts(g,a,b);let s='';for(let k=0;k<p.length-1;k++){const pos=g.f((p[k]+p[k+1])/2)>=0;s+=area(g.f,p[k],p[k+1],sx,sy,geom?'var(--gr)':pos?'var(--bl)':'var(--rd)',o)}return s};
+const vl=(x,sx,sy,yr,c='var(--mut)')=>`<line x1="${sx(x)}" y1="${sy(yr[0])}" x2="${sx(x)}" y2="${sy(yr[1])}" stroke="${c}" stroke-dasharray="5 4" stroke-width="1.5"/>`;
+const rects=(g,a,b,n,m,sx,sy)=>{let s='';const dx=dxOf(a,b,n);for(let i=1;i<=n;i++){const x0=a+(i-1)*dx,x1=x0+dx,y=g.f(samp(a,b,n,i,m));s+=`<rect x="${Math.min(sx(x0),sx(x1))}" y="${Math.min(sy(y),sy(0))}" width="${Math.abs(sx(x1)-sx(x0))}" height="${Math.abs(sy(y)-sy(0))}" fill="${y>=0?'var(--or)':'var(--pu)'}" fill-opacity=".45" stroke="var(--fg)" stroke-opacity=".5"/>`}return s};
+const yrange=(f,lo,hi)=>{let u=[0];for(let i=0;i<=100;i++)u.push(f(lo+(hi-lo)*i/100));const a=Math.min(...u),b=Math.max(...u),p=(b-a||2)*.14;return[a-p,b+p]};
+
+/* Navigasi */
+const TT=['Beranda','Jumlah Riemann','Integral Bertanda','Integral Tak Tentu','Turunan & Integral'];
+TT.forEach((t,i)=>{const b=document.createElement('button');b.textContent=t;b.onclick=()=>go(i);$('#nv').append(b)});
+function go(i){$$('section').forEach((s,k)=>s.classList.toggle('on',k===i));$$('#nv button').forEach((b,k)=>b.setAttribute('aria-current',k===i));scrollTo(0,0);[0,R,S2,S3,S4][i]&&[0,R,S2,S3,S4][i]()}
+$('#mods').innerHTML=TT.slice(1).map((t,i)=>`<li><button class="btn s" onclick="go(${i+1})">${t}</button></li>`).join('');
+$('#go').onclick=()=>go(1);go(0);
+{const g=FN[1],yr=yrange(g.f,0,2);plot($('#pv'),[-.3,2.4],yr,(sx,sy)=>rects(g,0,2,4,'L',sx,sy)+curve(g.f,-.3,2.4,sx,sy))}
+
+/* Modul Riemann */
+const D=()=>({g:1,a:0,b:2,n:4,m:'L'});let st=D();
+$('#fs').innerHTML=FN.map((g,i)=>`<option value="${i}">${g.l}</option>`).join('');
+const sync=()=>{$('#fs').value=st.g;$('#ia').value=+st.a.toFixed(5);$('#ib').value=+st.b.toFixed(5);$('#in').value=st.n;$('#nl').textContent=st.n;$$('[name=m]').forEach(r=>r.checked=r.value===st.m);$('#warn').textContent=''};
+function mono(f,lo,hi){let u=1,d=1,p=f(lo);for(let i=1;i<=200;i++){const v=f(lo+(hi-lo)*i/200);if(v<p-1e-12)u=0;if(v>p+1e-12)d=0;p=v}return u&&d?'k':u?'naik':d?'turun':'tak'}
+function R(){const g=FN[st.g],{a,b,n,m}=st,lo=Math.min(a,b),hi=Math.max(a,b),pad=(hi-lo)*.15,xr=[lo-pad,hi+pad],yr=yrange(g.f,lo,hi);
+ plot($('#pl'),xr,yr,(sx,sy)=>(!$('#ie').checked?'':shade(g,a,b,sx,sy,false,.18))+rects(g,a,b,n,m,sx,sy)+curve(g.f,xr[0],xr[1],sx,sy)+vl(a,sx,sy,yr)+vl(b,sx,sy,yr),420);
+ const S=riemann(g.f,a,b,n,m),I=exact(g,a,b),E=Math.abs(S-I),dx=dxOf(a,b,n);
+ $('#res').innerHTML=`<dt>Fungsi</dt><dd>${g.l}</dd><dt>Interval</dt><dd>[${fm(a)}, ${fm(b)}]</dd><dt>n</dt><dd>${n}</dd><dt>Δx</dt><dd>${fm(dx)}</dd><dt>Metode</dt><dd>${MN[m]}</dd><dt>Pendekatan Sₙ (bukan nilai eksak)</dt><dd>${fm(S)}</dd><dt>Integral eksak (bertanda)</dt><dd>${fm(I)}</dd><dt>Galat mutlak |Sₙ − I|</dt><dd>${fm(E)}</dd>`;
+ const mo=a<b?mono(g.f,a,b):'',ro=roots(g,a,b),ob=[];
+ ob.push(`Dengan ${n} persegi panjang, hasil pendekatan ${fm(S)} ${E<1e-9?'sama dengan':'masih berbeda dari'} nilai integral ${fm(I)} (galat mutlak ${fm(E)}).`);
+ if(a>b)ob.push('Karena a &gt; b, Δx bernilai negatif dan nilai integral berubah tanda; arah selisih pendekatan juga ikut terbalik.');
+ else if(m==='M')ob.push('Titik tengah menyeimbangkan sebagian galat di tiap subselang. Ini sering lebih akurat, tetapi tidak dijamin untuk semua fungsi.');
+ else if(mo==='k')ob.push('Fungsi konstan pada interval ini, sehingga semua metode memberi hasil tepat.');
+ else if(mo==='tak')ob.push('Fungsi tidak monoton pada interval ini, sehingga titik kiri atau kanan tidak otomatis lebih rendah atau lebih tinggi dari integral. Bandingkan dengan nilai eksak.');
+ else{const up=(mo==='naik')===(m==='R');ob.push(`Fungsi ${mo} pada interval ini, sehingga titik ${m==='L'?'kiri':'kanan'} memberikan pendekatan yang ${up?'lebih tinggi':'lebih rendah'} (atau sama) dari integral.`)}
+ if(ro.length)ob.push('Kurva memotong sumbu-x di dalam interval, jadi persegi panjang di bawah sumbu bernilai negatif dan dapat mengurangi jumlah total.');
+ const es=['L','R','M'].map(k=>[k,Math.abs(riemann(g.f,a,b,n,k)-I)]),best=es.slice().sort((x,y)=>x[1]-y[1])[0];
+ ob.push(`Galat pada n = ${n}: kiri ${fm(es[0][1])}, kanan ${fm(es[1][1])}, tengah ${fm(es[2][1])}. Terkecil di sini: ${MN[best[0]].toLowerCase()}.`);
+ ob.push('Ketika n bertambah, pendekatan cenderung mendekati integral untuk fungsi kontinu, tetapi galat tidak harus turun monoton di setiap langkah.');
+ $('#obs').innerHTML=ob.map(t=>`<li>${t}</li>`).join('');
+ const F={L:'a + (i − 1)Δx',R:'a + iΔx',M:'a + (i − ½)Δx'}[m],x1=samp(a,b,n,1,m),xn=samp(a,b,n,n,m);
+ $('#exl').innerHTML=`<li>Bagi [${fm(a)}, ${fm(b)}] menjadi n = ${n} subselang.</li><li>Lebar tiap subselang: Δx = (b − a)/n = ${fm(dx)}.</li><li>Pilih satu titik sampel per subselang (${MN[m].toLowerCase()}): xᵢ* = ${F}. Di sini x₁* = ${fm(x1)} dan x${'ₙ'}* = ${fm(xn)}.</li><li>Kontribusi bertanda tiap persegi panjang: f(xᵢ*)Δx. Positif di atas sumbu-x, negatif di bawahnya. Untuk i = 1: ${fm(g.f(x1)*dx)}.</li><li>Jumlahkan: Sₙ = Σ f(xᵢ*)Δx = ${fm(S)}.</li><li>Perhalus partisi (n → ∞) dan Sₙ mendekati integral tentu.</li>`}
+const rd=()=>{const a=parseFloat($('#ia').value),b=parseFloat($('#ib').value),e=why(a,b,st.n);if(e){$('#warn').textContent=e+' Grafik tidak diperbarui.';return}st.a=a;st.b=b;$('#warn').textContent=a>b?'Batas dibalik: nilai integral berubah tanda (bukan luas positif).':'';R()};
+$('#ia').oninput=$('#ib').oninput=rd;
+$('#fs').onchange=e=>{st.g=+e.target.value;st.a=FN[st.g].a;st.b=FN[st.g].b;sync();R()};
+$('#in').oninput=e=>{st.n=+e.target.value;$('#nl').textContent=st.n;R()};
+$$('[name=m]').forEach(r=>r.onchange=()=>{st.m=r.value;R()});
+$('#ie').onchange=R;
+$('#rs').onclick=()=>{st=D();$('#ie').checked=true;sync();R()};
+$('#tv').onclick=()=>{$('#ex').hidden=true;$('#tv').className='btn on';$('#tm').className='btn s'};
+$('#tm').onclick=()=>{$('#ex').hidden=false;$('#tm').className='btn on';$('#tv').className='btn s'};
+const notes=[];$('#rsv').onclick=()=>{const t=$('#rf').value.trim();if(!t)return;notes.push(t);$('#rf').value='';$('#rl').innerHTML=notes.map(n=>`<li></li>`).join('');$$('#rl li').forEach((li,i)=>li.textContent=notes[i])};
+R();
+
+/* Integral bertanda */
+const EX=[[1,0,2,'8/3'],[0,-1,1,'0'],[5,0,2,'2/3']];let se=0;
+$('#eb').innerHTML=EX.map((e,i)=>`<button class="btn s" data-i="${i}">${['∫₀² x² dx','∫₋₁¹ x dx','∫₀² (x² − 1) dx'][i]}</button>`).join('');
+$$('#eb button').forEach(b=>b.onclick=()=>{se=+b.dataset.i;S2()});$$('[name=sv]').forEach(r=>r.onchange=S2);
+function S2(){const[gi,a,b,fr]=EX[se],g=FN[gi],geom=$('[name=sv]:checked').value==='g',p=pts(g,a,b),I=exact(g,a,b),G=geo(g,a,b);
+ $$('#eb button').forEach((x,i)=>x.classList.toggle('on',i===se));
+ const yr=yrange(g.f,a,b),xr=[a-.4,b+.4];
+ plot($('#p2'),xr,yr,(sx,sy)=>shade(g,a,b,sx,sy,geom,.4)+curve(g.f,xr[0],xr[1],sx,sy)+vl(a,sx,sy,yr)+vl(b,sx,sy,yr));
+ let rows='';for(let k=0;k<p.length-1;k++){const v=g.F(p[k+1])-g.F(p[k]);rows+=`<li>[${fm(p[k])}, ${fm(p[k+1])}]: nilai bertanda ${fm(v)} (${v>=0?'di atas sumbu: positif':'di bawah sumbu: negatif'}), luas ${fm(Math.abs(v))}</li>`}
+ $('#t2').innerHTML=`<h2>${g.l}, [${a}, ${b}]</h2><p><b>${geom?'Luas geometris total':'Integral bertanda'} = ${geom?fm(G):fr+' ≈ '+fm(I)}</b></p><p class="mut">${geom?'Luas tiap daerah dijumlahkan sebagai nilai mutlak, dipisah di titik potong sumbu-x.':`Integral bertanda ${fm(I)}; luas geometris total ${fm(G)}.`}</p><ol><li>Antiturunan: F(x) = ${g.Ft}.</li><li>F(${a}) = ${fm(g.F(a))}, F(${b}) = ${fm(g.F(b))}.</li><li>F(b) − F(a) = ${fm(I)}.</li></ol><p><b>Daerah:</b></p><ul>${rows}</ul>`}
+
+/* Integral tak tentu */
+function S3(){const C=+$('#ic').value;$('#cl').textContent=C;const f=x=>x*x,F=x=>x*x+C;
+ plot($('#p3'),[-3,3],[-6,14],(sx,sy)=>curve(f,-3,3,sx,sy,'var(--mut)','6 4')+curve(F,-3,3,sx,sy));
+ const d=dcheck(F,x=>2*x,[-3,-1.5,0,1,2.5]);
+ $('#t3').innerHTML=`<h2>y = x² + ${C<0?'('+C+')':C}</h2><p>Garis putus-putus adalah y = x² (C = 0). Kurva biru bergeser vertikal sejauh C.</p><div class="math">d/dx (x² + C) = 2x + 0 = 2x</div><p><b>Uji turunan:</b> selisih terbesar antara turunan numerik F dan 2x pada beberapa titik = ${d.toExponential(1)} ${d<1e-6?'(sesuai, antiturunan terverifikasi)':'(tidak sesuai)'}.</p><p class="mut">Semua kurva berbeda hanya di C, sehingga memiliki turunan yang sama.</p>`}
+$('#ic').oninput=S3;
+
+/* Teorema dasar */
+function S4(){const x=+$('#ix').value;$('#xl').textContent=x;const f=t=>2*t,A=t=>t*t,yA=[-.5,7],yB=[-1,10.5];
+ plot($('#pa'),[0,3.2],yA,(sx,sy)=>area(f,0,x,sx,sy,'var(--bl)',.35)+curve(f,0,3.2,sx,sy)+vl(x,sx,sy,yA),320);
+ plot($('#pb'),[0,3.2],yB,(sx,sy)=>{const s=2*x,L=t=>A(x)+s*(t-x);return curve(A,0,3.2,sx,sy)+`<path d="${P(L,Math.max(0,x-.9),Math.min(3.2,x+.9),sx,sy,2)}" stroke="var(--or)" stroke-width="2.5" fill="none"/><circle cx="${sx(x)}" cy="${sy(A(x))}" r="6" fill="var(--rd)"/>`+vl(x,sx,sy,yB)},320);
+ $('#t4').innerHTML=`<p><b>Kiri:</b> luas terarsir di bawah f(x) = 2x dari 0 sampai ${x} = ${fm(x*x)}. <b>Kanan:</b> A(${x}) = ${x}² = ${fm(x*x)}; garis oranye adalah garis singgung dengan kemiringan A′(${x}) = ${fm(2*x)}, sama dengan f(${x}) = ${fm(2*x)}.</p><div class="math">A′(x) = f(x) &nbsp;(untuk f kontinu) &nbsp; dan &nbsp; ∫ₐᵇ f(x) dx = F(b) − F(a), dengan F′ = f</div><p class="mut">Contoh: ∫₀² 2x dx = 2² − 0² = 4. Hasil ini sama dengan limit jumlah Riemann pada modul sebelumnya. <button class="btn s" onclick="go(1)">Coba di Jumlah Riemann</button></p>`}
+$('#ix').oninput=S4;
+</script></body></html>
